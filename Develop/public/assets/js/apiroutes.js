@@ -24,7 +24,7 @@ module.exports = (app) => {
                 console.log(error);
                 return;
             }
-            for (let [i, item] of note.submit()) {
+            for (let [i, item] of note.entries()) {
                 if (item.id === req.params.id) {
                     note.splice(i, 1);
                     console.log(note);
