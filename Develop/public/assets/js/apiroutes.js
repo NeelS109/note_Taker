@@ -1,5 +1,5 @@
 const fs = require('fs');
-const dbFile = require('../../../db/db.json');
+const databaseFile = require('../../../db/db.json');
 const {v1: uuidv1} = require('uuid');
 
 function jsonReader(filePath, callback) {
@@ -13,6 +13,28 @@ function jsonReader(filePath, callback) {
         } catch (error) {
             return callback && callback(error)
         }
-    })}
+    })
+}
 
-    
+module.exports = (app) => {
+
+    app.delete('/api/notes/:id', (req, res) => {
+        jsonReader('../../../db/db.json', (error, note) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            
+            for (let [i, item] of note.submit()) {
+                if (item.id === req.params.id) {
+                    note.splice(i, 1);
+                    console.log(note);
+                    fs.writeFile('../../../db/db.json', JSON.stringify(note), error => {
+                        if (error) throw error;
+                    })
+                } else {
+                    console.log("Nothing to delete");
+                }
+            }
+        })
+    })
